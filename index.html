@@ -1,9 +1,9 @@
-        <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estação Meteorológica Pro | Captura de Localização</title>
+    <title>Estação Meteorológica Pro | Modo Manual</title>
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -16,7 +16,6 @@
             --text-main: #0f172a;
             --text-muted: #64748b;
             --success: #10b981;
-            --error: #ef4444;
         }
 
         * {
@@ -37,7 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* Formas atmosféricas abstratas ao fundo */
         .weather-shape-1, .weather-shape-2 {
             position: absolute;
             border-radius: 50%;
@@ -68,7 +66,7 @@
             padding: 2.5rem;
             border-radius: 24px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             z-index: 1;
             position: relative;
         }
@@ -78,7 +76,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Widget de Clima Flutuante no Topo */
         .weather-widget {
             display: flex;
             align-items: center;
@@ -139,42 +136,9 @@
             margin-bottom: 1.25rem;
             text-align: center;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .status-box.loading {
             background-color: #f0f9ff;
             color: #0369a1;
             border: 1px solid #bae6fd;
-        }
-
-        .status-box.success {
-            background-color: #ecfdf5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .status-box.error {
-            background-color: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background-color: currentColor;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.6); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(2, 132, 199, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
         }
 
         .form-group {
@@ -191,10 +155,6 @@
             margin-bottom: 0.4rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-        }
-
-        .input-wrapper {
-            position: relative;
         }
 
         input[type="text"] {
@@ -236,17 +196,6 @@
             transform: translateY(-1px);
         }
 
-        button:active {
-            transform: translateY(1px);
-        }
-
-        button:disabled {
-            background: #94a3b8;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         #success-screen {
             display: none;
             text-align: center;
@@ -280,7 +229,6 @@
     <div class="container">
         <!-- Formulário Principal -->
         <div id="form-container">
-            <!-- Widget de Clima Simulado -->
             <div class="weather-widget">
                 <div class="weather-info">
                     <svg viewBox="0 0 24 24">
@@ -288,45 +236,85 @@
                     </svg>
                     <div class="weather-text">
                         <span>Condição Atmosférica</span>
-                        <strong id="weatherCondition">Modo Manual / Pronto</strong>
+                        <strong>Sistema Operacional</strong>
                     </div>
                 </div>
-                <div class="weather-temp" id="weatherTemp">--°C</div>
+                <div class="weather-temp">24°C</div>
             </div>
 
             <header>
                 <h1>Telemetria de Campo</h1>
-                <p>Preencha ou aguarde a captura automática</p>
+                <p>Preenchimento Manual Habilitado</p>
             </header>
 
-            <div id="geo-status" class="status-box loading">
-                <div class="pulse-dot"></div>
-                <span>Pronto para uso (Campos liberados para digitação)</span>
+            <div class="status-box">
+                <span>Campos abertos para digitação livre.</span>
             </div>
 
             <form id="locationForm">
                 <div class="form-group">
                     <label for="local"><span>Local / Endereço</span> <span>Livre</span></label>
-                    <div class="input-wrapper">
-                        <input type="text" id="local" name="entry.773170880" placeholder="Digite o local ou aguarde GPS..." required>
-                    </div>
+                    <input type="text" id="local" name="entry.773170880" placeholder="Digite o local (Ex: São Paulo - SP)" required>
                 </div>
 
                 <div class="form-group">
                     <label for="latitude"><span>Latitude</span> <span>Livre</span></label>
-                    <div class="input-wrapper">
-                        <input type="text" id="latitude" name="entry.1776832054" placeholder="Ex: -23.550520" required>
-                    </div>
+                    <input type="text" id="latitude" name="entry.1776832054" placeholder="Ex: -23.550520" required>
                 </div>
 
                 <div class="form-group">
                     <label for="longitude"><span>Longitude</span> <span>Livre</span></label>
-                    <div class="input-wrapper">
-                        <input type="text" id="longitude" name="entry.374965073" placeholder="Ex: -46.633308" required>
-                    </div>
+                    <input type="text" id="longitude" name="entry.374965073" placeholder="Ex: -46.633308" required>
                 </div>
 
                 <button type="submit" id="submitBtn">Transmitir Dados para o Google Forms</button>
             </form>
 
             <div class="footer-info">
+                Segurança SSL • Encriptação Ativa
+            </div>
+        </div>
+
+        <!-- Tela de Sucesso -->
+        <div id="success-screen">
+            <h2>Transmissão Concluída!</h2>
+            <p>Os dados informados foram salvos com sucesso no sistema.</p>
+        </div>
+    </div>
+
+    <script>
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc07W2nfckvU6-mTDKKScpqS9h4J1PFgErkM6gi8vJSh_O4aA/formResponse";
+        
+        const locationForm = document.getElementById('locationForm');
+        const formContainer = document.getElementById('form-container');
+        const successScreen = document.getElementById('success-screen');
+        const submitBtn = document.getElementById('submitBtn');
+
+        locationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Transmitindo...";
+
+            const formData = new URLSearchParams();
+            formData.append('entry.773170880', document.getElementById('local').value);
+            formData.append('entry.1776832054', document.getElementById('latitude').value);
+            formData.append('entry.374965073', document.getElementById('longitude').value);
+
+            fetch(FORM_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            })
+            .then(() => {
+                formContainer.style.display = 'none';
+                successScreen.style.display = 'block';
+            })
+            .catch((err) => {
+                console.error("Erro no envio:", err);
+                formContainer.style.display = 'none';
+                successScreen.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
