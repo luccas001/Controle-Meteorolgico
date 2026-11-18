@@ -1,6 +1,6 @@
 # Controle-Meteorolgico
 
-# 🚀 Dashboard de Talentos - Bootcamp Generation Brasil
+# 🚀 - Bootcamp Generation Brasil
 
 > Projeto desenvolvido durante as aulas práticas do bootcamp da **Generation Brasil**, aplicando conceitos fundamentais de consumo de **APIs**, manipulação avançada de **Listas (Arrays)** e estruturas chave-valor (**Dicionários/Objetos JSON**).
 
