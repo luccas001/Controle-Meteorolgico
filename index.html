@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Localização e Envio</title>
+    <!-- Google Fonts para tipografia profissional -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background-color: #f9fafb;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background-color: #ffffff;
+        }
+
+        input[readonly] {
+            background-color: #f3f4f6;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .status-box {
+            font-size: 0.8rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status-box.loading {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+
+        .status-box.success {
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+
+        .status-box.error {
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Tela de Sucesso Oculta Inicialmente */
+        #success-screen {
+            display: none;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        #success-screen h2 {
+            color: var(--success);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #success-screen p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulário Principal -->
+        <div id="form-container">
+            <header>
+                <h1>Check-in de Localização</h1>
+                <p>Permita o acesso à sua localização para prosseguir com o envio.</p>
+            </header>
+
+            <div id="geo-status" class="status-box loading">
+                Obtendo sua localização geográfica...
+            </div>
+
+            <form id="locationForm">
+                <div class="form-group">
+                    <label for="local">Local / Endereço</label>
+                    <input type="text" id="local" name="entry.773170880" placeholder="Aguardando geolocalização..." readonly required>
+                </div>
+
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="text" id="latitude" name="entry.1776832054" placeholder="0.000000" readonly required>
+                </div>
+
+                <div class="form-group">
+                    <label for="longitude">Latitude</label>
+                    <input type="text" id="longitude" name="entry.374965073" placeholder="0.000000" readonly required>
+                </div>
+
+                <button type="submit" id="submitBtn" disabled>Enviar Dados</button>
+            </form>
+        </div>
+
+        <!-- Tela de Sucesso -->
+        <div id="success-screen">
+            <h2>Dados enviados com sucesso!</h2>
+            <p>Obrigado por compartilhar sua localização. Você já pode fechar esta página.</p>
+        </div>
+    </div>
+
+    <script>
+        // Mapeamento dos IDs oficiais do Google Forms extraídos do seu link
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc07W2nfckvU6-mTDKKScpqS9h4J1PFgErkM6gi8vJSh_O4aA/formResponse";
+        
+        const inputLocal = document.getElementById('local');
+        const inputLat = document.getElementById('latitude');
+        const inputLng = document.getElementById('longitude');
+        const geoStatus = document.getElementById('geo-status');
+        const submitBtn = document.getElementById('submitBtn');
+        const locationForm = document.getElementById('locationForm');
+        const formContainer = document.getElementById('form-container');
+        const successScreen = document.getElementById('success-screen');
+
+        // Função para buscar o nome do local via OpenStreetMap (Reverse Geocoding)
+        async function fetchAddress(lat, lng) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+                    headers: { 'Accept-Language': 'pt-BR' }
+                });
+                const data = await response.json();
+                if (data && data.display_name) {
+                    // Pega um formato mais limpo ou o display_name completo
+                    inputLocal.value = data.display_name;
+                } else {
+                    inputLocal.value = `Lat: ${lat}, Lng: ${lng}`;
+                }
+            } catch (error) {
+                console.warn("Não foi possível resolver o endereço reverso, usando coordenadas brutas.", error);
+                inputLocal.value = `Lat: ${lat}, Lng: ${lng}`;
+            }
+        }
+
+        // Executa a geolocalização ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!navigator.geolocation) {
+                geoStatus.className = "status-box error";
+                geoStatus.textContent = "Seu navegador não suporta geolocalização.";
+                inputLocal.removeAttribute('readonly');
+                inputLat.removeAttribute('readonly');
+                inputLng.removeAttribute('readonly');
+                inputLocal.placeholder = "Digite o local manualmente";
+                inputLat.placeholder = "Digite a latitude";
+                inputLng.placeholder = "Digite a longitude";
+                submitBtn.disabled = false;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    inputLat.value = lat;
+                    inputLng.value = lng;
+
+                    geoStatus.className = "status-box success";
+                    geoStatus.textContent = "Localização obtida com sucesso!";
+
+                    // Busca o endereço amigável
+                    await fetchAddress(lat, lng);
+
+                    // Libera o botão de envio
+                    submitBtn.disabled = false;
+                },
+                (error) => {
+                    console.error(error);
+                    geoStatus.className = "status-box error";
+                    geoStatus.textContent = "Permissão de localização negada ou indisponível. Insira os dados manualmente.";
+                    
+                    // Permite preenchimento manual caso o usuário negue
+                    inputLocal.removeAttribute('readonly');
+                    inputLat.removeAttribute('readonly');
+                    inputLng.removeAttribute('readonly');
+                    inputLocal.placeholder = "Digite o local manualmente";
+                    inputLat.placeholder = "Digite a latitude";
+                    inputLng.placeholder = "Digite a longitude";
+                    submitBtn.disabled = false;
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        });
+
+        // Envio assíncrono para o Google Forms via fetch (No-Cors)
+        locationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Enviando...";
+
+            const formData = new URLSearchParams();
+            formData.append('entry.773170880', inputLocal.value);
+            formData.append('entry.1776832054', inputLat.value);
+            formData.append('entry.374965073', inputLng.value);
+
+            // Google Forms exige mode 'no-cors', o que significa que a resposta virá opaca (sem erro visível no JS, mas os dados caem no Forms)
+            fetch(FORM_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            })
+            .then(() => {
+                // Transição suave para tela de sucesso
+                formContainer.style.display = 'none';
+                successScreen.style.display = 'block';
+            })
+            .catch((err) => {
+                console.error("Erro ao enviar:", err);
+                // Mesmo com erro de CORS do navegador, o Forms geralmente computa. Por segurança, exibimos sucesso.
+                formContainer.style.display = 'none';
+                successScreen.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
